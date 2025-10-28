@@ -5,8 +5,11 @@ export type { ThemeProviderProps } from '../providers/theme/ThemeProvider';
 // Foundation Components
 export * from './foundation';
 
-// Layout Components  
+// Layout Components
 export * from './layout';
+
+// Container Components
+export * from './containers';
 
 // Interactive Components
 export * from './interactive';
