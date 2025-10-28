@@ -60,8 +60,13 @@ module.exports = {
       },
     ],
 
-    // Skip npm plugin since we handle publishing manually in workflow
-    // We still need package.json to be updated, which git plugin handles
+    // Update package.json version (but don't publish to npm)
+    [
+      '@semantic-release/npm',
+      {
+        npmPublish: false, // We handle publishing manually in workflow
+      },
+    ],
 
     // Create GitHub release
     [
