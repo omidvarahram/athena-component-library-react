@@ -1,3 +1,10 @@
+## [1.0.5](https://github.com/omidvarahram/athena-component-library-react/compare/v1.0.4...v1.0.5) (2025-10-28)
+
+
+### Bug Fixes
+
+* add npm plugin to update package.json version without publishing ([f3e812c](https://github.com/omidvarahram/athena-component-library-react/commit/f3e812cc8d6c8d97cbcaa921306c9b750f6d3379))
+
 ## [1.0.4](https://github.com/omidvarahram/athena-component-library-react/compare/v1.0.3...v1.0.4) (2025-10-28)
 
 
