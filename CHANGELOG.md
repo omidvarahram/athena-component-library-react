@@ -1,3 +1,10 @@
+## [1.0.2](https://github.com/omidvarahram/athena-component-library-react/compare/v1.0.1...v1.0.2) (2025-10-28)
+
+
+### Bug Fixes
+
+* ensure NPM publishing works with cross-platform clean script ([f2b0c3f](https://github.com/omidvarahram/athena-component-library-react/commit/f2b0c3f73dcd924b013914377f6a2bec360c89ee))
+
 ## [1.0.1](https://github.com/omidvarahram/athena-component-library-react/compare/v1.0.0...v1.0.1) (2025-10-28)
 
 
