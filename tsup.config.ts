@@ -1,13 +1,13 @@
 import { defineConfig } from 'tsup';
-import { execSync } from 'child_process';
-import { existsSync } from 'fs';
+import { existsSync, cpSync, mkdirSync } from 'fs';
+import { join } from 'path';
 
 export default defineConfig({
   entry: [
     'src/index.ts',
     'src/providers/theme/ThemeProvider.tsx',
     'src/types/index.ts',
-    'src/utils/index.ts'
+    'src/utils/index.ts',
   ],
   format: ['cjs', 'esm'],
   dts: true,
@@ -23,31 +23,35 @@ export default defineConfig({
   bundle: true,
   onSuccess: async () => {
     console.log('📦 Preparing package for publishing...');
-    
+
     try {
+      // Ensure build directory exists
+      if (!existsSync('build')) {
+        mkdirSync('build', { recursive: true });
+      }
+
       // Copy docs folder to build/docs
       if (existsSync('docs')) {
         console.log('📁 Copying docs...');
-        execSync('xcopy docs build\\docs\\ /E /I /Y', { stdio: 'inherit' });
+        cpSync('docs', join('build', 'docs'), { recursive: true });
       }
-      
+
       // Copy README.md to build/
       if (existsSync('README.md')) {
         console.log('📄 Copying README...');
-        execSync('copy README.md build\\', { stdio: 'inherit' });
+        cpSync('README.md', join('build', 'README.md'));
       }
-      
+
       // Copy LICENSE to build/
       if (existsSync('LICENSE')) {
         console.log('⚖️ Copying LICENSE...');
-        execSync('copy LICENSE build\\', { stdio: 'inherit' });
+        cpSync('LICENSE', join('build', 'LICENSE'));
       }
-      
+
       // Copy package.json to build/ (for npm publish)
       console.log('📋 Copying package.json...');
-      execSync('copy package.json build\\', { stdio: 'inherit' });
-      
-      
+      cpSync('package.json', join('build', 'package.json'));
+
       console.log('✅ Package ready for publishing!');
       console.log('📁 Build folder contains:');
       console.log('   - dist/ (compiled code + source maps)');
@@ -57,7 +61,6 @@ export default defineConfig({
       console.log('   - package.json');
       console.log('');
       console.log('🚀 Run: cd build && npm publish');
-      
     } catch (error) {
       console.warn('⚠️ Failed to prepare package:', error);
     }
