@@ -1,4 +1,4 @@
-# Athena Component Library React
+# Athena Component Library
 
 Professional, themeable, accessible React component library with TypeScript and Tailwind CSS support.
 
@@ -52,14 +52,12 @@ import { Button, Card, Input, useTheme } from 'athena-component-library-react';
 
 function MyComponent() {
   const { mode, toggleTheme } = useTheme();
-  
+
   return (
     <Card>
       <Input placeholder="Enter your name" />
       <Button variant="primary">Submit</Button>
-      <Button onClick={toggleTheme}>
-        Current theme: {mode}
-      </Button>
+      <Button onClick={toggleTheme}>Current theme: {mode}</Button>
     </Card>
   );
 }
@@ -101,11 +99,7 @@ const customTheme: ThemeConfig = {
 
 function App() {
   return (
-    <ThemeProvider 
-      defaultMode="custom" 
-      customTheme={customTheme}
-      persistTheme={true}
-    >
+    <ThemeProvider defaultMode="custom" customTheme={customTheme} persistTheme={true}>
       <YourAppContent />
     </ThemeProvider>
   );
@@ -115,6 +109,7 @@ function App() {
 ## Components
 
 ### Foundation
+
 - Typography
 - Colors
 - Spacing
@@ -122,6 +117,7 @@ function App() {
 - Borders
 
 ### Layout
+
 - Container
 - Grid
 - Stack
@@ -129,6 +125,7 @@ function App() {
 - Spacer
 
 ### Interactive
+
 - Button
 - Input
 - Select
@@ -138,6 +135,7 @@ function App() {
 - Slider
 
 ### Navigation
+
 - Header
 - Nav
 - Breadcrumb
@@ -145,6 +143,7 @@ function App() {
 - Tabs
 
 ### Feedback
+
 - Alert
 - Toast
 - Modal
@@ -152,6 +151,7 @@ function App() {
 - Loading
 
 ### Data Display
+
 - Card
 - Table
 - List
@@ -160,6 +160,7 @@ function App() {
 - Image
 
 ### Form
+
 - Form
 - Field
 - Fieldset
