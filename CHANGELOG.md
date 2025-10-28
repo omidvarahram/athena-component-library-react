@@ -1,3 +1,10 @@
+## [1.0.3](https://github.com/omidvarahram/athena-component-library-react/compare/v1.0.2...v1.0.3) (2025-10-28)
+
+
+### Bug Fixes
+
+* prevent rebuild during NPM publish from build directory ([2581f3f](https://github.com/omidvarahram/athena-component-library-react/commit/2581f3f18a0e5fe480cde48c524f2066cec240d5))
+
 ## [1.0.2](https://github.com/omidvarahram/athena-component-library-react/compare/v1.0.1...v1.0.2) (2025-10-28)
 
 
