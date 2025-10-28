@@ -49,7 +49,7 @@
     "pre-build": "yarn lint && yarn test",
     "clean": "node -e \"const fs=require('fs'); if(fs.existsSync('build')) fs.rmSync('build', {recursive:true, force:true})\"",
     "prebuild": "yarn pre-build",
-    "prepublishOnly": "yarn clean && yarn build",
+    "prepublishOnly": "echo \"📦 Publishing pre-built package...\"",
     "publish:build": "yarn build",
     "publish:package": "cd build && npm publish",
     "prepare": "husky"
