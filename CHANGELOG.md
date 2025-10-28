@@ -1,3 +1,10 @@
+## [1.0.1](https://github.com/omidvarahram/athena-component-library-react/compare/v1.0.0...v1.0.1) (2025-10-28)
+
+
+### Bug Fixes
+
+* replace Windows-specific clean command with cross-platform Node.js script ([d5df997](https://github.com/omidvarahram/athena-component-library-react/commit/d5df99771e9c1c662d05ee91fcd86d83429802b4))
+
 # 1.0.0 (2025-10-28)
 
 
