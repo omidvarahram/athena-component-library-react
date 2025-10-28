@@ -1,3 +1,10 @@
+## [1.0.4](https://github.com/omidvarahram/athena-component-library-react/compare/v1.0.3...v1.0.4) (2025-10-28)
+
+
+### Bug Fixes
+
+* rebuild package after semantic-release to include correct version ([1cd1e9c](https://github.com/omidvarahram/athena-component-library-react/commit/1cd1e9c561838e542f177e204728dcdd0704166d))
+
 ## [1.0.3](https://github.com/omidvarahram/athena-component-library-react/compare/v1.0.2...v1.0.3) (2025-10-28)
 
 
