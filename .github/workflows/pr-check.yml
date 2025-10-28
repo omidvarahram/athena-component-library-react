@@ -1,0 +1,51 @@
+name: 🔍 PR Quality Check
+
+on:
+  pull_request:
+    branches: [ master, main ]
+
+jobs:
+  validate:
+    name: 🔍 Validate PR
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: 📥 Checkout code
+        uses: actions/checkout@v4
+        
+      - name: 📦 Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+          cache: 'yarn'
+          
+      - name: 📥 Install dependencies
+        run: yarn install --frozen-lockfile
+        
+      - name: 📝 Lint code
+        run: yarn lint
+        
+      - name: 🧪 Run tests with coverage
+        run: yarn test --coverage
+        
+      - name: 🔒 Security audit
+        run: yarn audit --groups dependencies
+        
+      - name: 🏗️ Test build
+        run: yarn build
+        
+      - name: 📊 Coverage comment
+        uses: romeovs/lcov-reporter-action@v0.3.1
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          lcov-file: ./coverage/lcov.info
+          delete-old-comments: true
+        
+      - name: ✅ PR Status Check
+        run: |
+          echo "✅ All checks passed!"
+          echo "📋 Summary:"
+          echo "- ✅ Code linted successfully"
+          echo "- ✅ All tests passed with coverage requirements"
+          echo "- ✅ No security vulnerabilities found"
+          echo "- ✅ Build completed successfully"

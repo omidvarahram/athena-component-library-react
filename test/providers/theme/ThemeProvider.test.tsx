@@ -1,5 +1,5 @@
 import React from 'react';
-import { render, screen, fireEvent, waitFor, act } from '@testing-library/react';
+import { render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { ThemeProvider, useTheme } from '../../../src/providers/theme/ThemeProvider';
 
@@ -31,11 +31,6 @@ Object.defineProperty(document.documentElement, 'classList', {
 });
 
 // Mock persistence
-const mockPersistToLocalStorage = jest.fn();
-const mockRestoreFromLocalStorage = jest.fn();
-const mockSetCookie = jest.fn();
-const mockGetCookie = jest.fn();
-
 jest.mock('../../../src/utils/persistence', () => ({
   persistToLocalStorage: jest.fn(),
   restoreFromLocalStorage: jest.fn(),
@@ -44,24 +39,13 @@ jest.mock('../../../src/utils/persistence', () => ({
 }));
 
 // Import the mocked functions
-const { 
-  persistToLocalStorage,
-  restoreFromLocalStorage,
-  setCookie,
-  getCookie 
-} = jest.requireMock('../../../src/utils/persistence');
+const { persistToLocalStorage, restoreFromLocalStorage, setCookie, getCookie } = jest.requireMock(
+  '../../../src/utils/persistence'
+);
 
 // Test component that uses the theme context
 const TestConsumer = () => {
-  const { 
-    currentTheme, 
-    themes, 
-    theme, 
-    colors,
-    updateTheme,
-    updateConfig,
-    toggleTheme
-  } = useTheme();
+  const { currentTheme, themes, colors, updateTheme, updateConfig, toggleTheme } = useTheme();
 
   return (
     <div>
@@ -78,7 +62,10 @@ const TestConsumer = () => {
       <button data-testid="update-theme-light" onClick={() => updateTheme('light')}>
         Set Light
       </button>
-      <button data-testid="update-config" onClick={() => updateConfig({ colors: { bg: '#custom' } })}>
+      <button
+        data-testid="update-config"
+        onClick={() => updateConfig({ colors: { bg: '#custom' } })}
+      >
         Update Config
       </button>
     </div>
@@ -98,7 +85,7 @@ describe('ThemeProvider', () => {
     getCookie.mockClear();
     mockConsoleWarn.mockClear();
     mockConsoleError.mockClear();
-    
+
     // Default mock returns
     restoreFromLocalStorage.mockReturnValue(null);
     getCookie.mockReturnValue(null);
@@ -216,10 +203,10 @@ describe('ThemeProvider', () => {
             buttonText: '#FFFFFF',
             linkColor: '#0066CC',
             linkHover: '#0052A3',
-          }
+          },
         },
-        themeName: 'Corporate'
-      }
+        themeName: 'Corporate',
+      },
     ];
 
     it('should register custom themes', async () => {
@@ -236,7 +223,7 @@ describe('ThemeProvider', () => {
 
     it('should warn about duplicate theme names', async () => {
       const duplicateThemes = [
-        { name: 'light', config: { colors: {} as any }, themeName: 'Custom Light' }
+        { name: 'light', config: { colors: {} as any }, themeName: 'Custom Light' },
       ];
 
       render(
@@ -253,9 +240,7 @@ describe('ThemeProvider', () => {
     });
 
     it('should warn about empty theme names', async () => {
-      const emptyNameThemes = [
-        { name: '', config: { colors: {} as any } }
-      ];
+      const emptyNameThemes = [{ name: '', config: { colors: {} as any } }];
 
       render(
         <ThemeProvider themes={emptyNameThemes}>
@@ -271,9 +256,7 @@ describe('ThemeProvider', () => {
     });
 
     it('should handle whitespace-only theme names', async () => {
-      const whitespaceThemes = [
-        { name: '   ', config: { colors: {} as any } }
-      ];
+      const whitespaceThemes = [{ name: '   ', config: { colors: {} as any } }];
 
       render(
         <ThemeProvider themes={whitespaceThemes}>
@@ -339,11 +322,7 @@ describe('ThemeProvider', () => {
     it('should warn when trying to set invalid theme', async () => {
       const TestComponent = () => {
         const { updateTheme } = useTheme();
-        return (
-          <button onClick={() => updateTheme('invalid')}>
-            Set Invalid
-          </button>
-        );
+        return <button onClick={() => updateTheme('invalid')}>Set Invalid</button>;
       };
 
       const user = userEvent.setup();
@@ -477,7 +456,7 @@ describe('ThemeProvider', () => {
 
     it('should handle custom persistence key configuration', () => {
       // Test that custom keys can be configured
-        expect(() => {
+      expect(() => {
         render(
           <ThemeProvider persistence={{ key: 'custom-user-prefs' }}>
             <TestConsumer />
@@ -517,12 +496,14 @@ describe('ThemeProvider', () => {
 
       expect(() => {
         render(
-          <ThemeProvider persistence={{ 
-            callbacks: { 
-              persist: mockCustomPersist,
-              restore: mockCustomRestore 
-            } 
-          }}>
+          <ThemeProvider
+            persistence={{
+              callbacks: {
+                persist: mockCustomPersist,
+                restore: mockCustomRestore,
+              },
+            }}
+          >
             <TestConsumer />
           </ThemeProvider>
         );
@@ -531,7 +512,7 @@ describe('ThemeProvider', () => {
   });
 
   describe('Theme change callback', () => {
-    it('should accept onThemeChange callback without errors', () => {  
+    it('should accept onThemeChange callback without errors', () => {
       const mockOnThemeChange = jest.fn();
 
       expect(() => {
@@ -564,7 +545,7 @@ describe('ThemeProvider', () => {
     it('should provide all context values', async () => {
       const TestComponent = () => {
         const context = useTheme();
-        
+
         return (
           <div>
             <div data-testid="has-current-theme">{typeof context.currentTheme}</div>
@@ -600,10 +581,10 @@ describe('ThemeProvider', () => {
     it('should handle config merging', async () => {
       const TestComponent = () => {
         const { updateConfig, theme } = useTheme();
-        
+
         React.useEffect(() => {
           updateConfig({
-            colors: { bg: '#custom1' }
+            colors: { bg: '#custom1' },
           });
         }, [updateConfig]);
 

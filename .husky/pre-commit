@@ -1,0 +1,18 @@
+#!/usr/bin/env sh
+. "$(dirname -- "$0")/_/husky.sh"
+
+echo "🔍 Running pre-commit checks..."
+
+# Run lint-staged for ESLint fixes
+echo "📝 Running linting checks..."
+yarn lint-staged
+
+# Run tests with coverage
+echo "🧪 Running tests with coverage..."
+yarn test
+
+# Run security audit
+echo "🔒 Running security audit..."
+yarn audit --groups dependencies
+
+echo "✅ Pre-commit checks completed successfully!"

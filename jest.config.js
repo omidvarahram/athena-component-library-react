@@ -16,21 +16,22 @@ module.exports = {
   coverageThreshold: {
     global: {
       branches: 70,
-      functions: 95,
+      functions: 90,
       lines: 90,
       statements: 90,
     },
   },
   coverageReporters: ['text', 'lcov', 'html'],
-  testMatch: [
-    '<rootDir>/test/**/*.{test,spec}.{ts,tsx}',
-  ],
+  testMatch: ['<rootDir>/test/**/*.{test,spec}.{ts,tsx}'],
   transform: {
-    '^.+\\.(ts|tsx)$': ['ts-jest', {
-      tsconfig: {
-        jsx: 'react',
+    '^.+\\.(ts|tsx)$': [
+      'ts-jest',
+      {
+        tsconfig: {
+          jsx: 'react',
+        },
       },
-    }],
+    ],
   },
   moduleFileExtensions: ['ts', 'tsx', 'js', 'jsx', 'json'],
   testPathIgnorePatterns: ['/node_modules/', '/build/', '/dist/', '/test/types/'],

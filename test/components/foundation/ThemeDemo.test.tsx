@@ -1,5 +1,5 @@
 import React from 'react';
-import { render, screen, fireEvent, act } from '@testing-library/react';
+import { render, screen, fireEvent } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { ThemeProvider } from '../../../src/providers/theme/ThemeProvider';
 import { ThemeDemo } from '../../../src/components/foundation/ThemeDemo';
@@ -24,7 +24,13 @@ jest.mock('../../../src/utils/persistence', () => ({
   getCookie: jest.fn(() => null),
 }));
 
-const TestWrapper = ({ children, theme = 'light' }: { children: React.ReactNode; theme?: string }) => (
+const TestWrapper = ({
+  children,
+  theme = 'light',
+}: {
+  children: React.ReactNode;
+  theme?: string;
+}) => (
   <ThemeProvider theme={theme} persistence={{ enabled: false }}>
     {children}
   </ThemeProvider>
@@ -88,9 +94,9 @@ describe('ThemeDemo', () => {
       </TestWrapper>
     );
 
-    const colorSwatches = screen.getAllByRole('generic').filter(el => 
-      el.className.includes('w-8 h-8 rounded border')
-    );
+    const colorSwatches = screen
+      .getAllByRole('generic')
+      .filter(el => el.className.includes('w-8 h-8 rounded border'));
 
     expect(colorSwatches).toHaveLength(4); // accent, success, warning, error
 
@@ -113,7 +119,7 @@ describe('ThemeDemo', () => {
 
   it('should call toggleTheme when button is clicked', async () => {
     const user = userEvent.setup();
-    
+
     render(
       <TestWrapper theme="light">
         <ThemeDemo />
@@ -121,7 +127,7 @@ describe('ThemeDemo', () => {
     );
 
     const toggleButton = screen.getByRole('button', { name: /toggle theme/i });
-    
+
     // Initially should show light
     expect(screen.getByText('light')).toBeInTheDocument();
 
@@ -134,7 +140,7 @@ describe('ThemeDemo', () => {
 
   it('should toggle from dark to light', async () => {
     const user = userEvent.setup();
-    
+
     render(
       <TestWrapper theme="dark">
         <ThemeDemo />
@@ -142,7 +148,7 @@ describe('ThemeDemo', () => {
     );
 
     const toggleButton = screen.getByRole('button', { name: /toggle theme/i });
-    
+
     // Initially should show dark
     expect(screen.getByText('dark')).toBeInTheDocument();
 
@@ -194,7 +200,7 @@ describe('ThemeDemo', () => {
 
   it('should handle theme changes via toggle button', async () => {
     const user = userEvent.setup();
-    
+
     render(
       <TestWrapper theme="light">
         <ThemeDemo />
@@ -234,8 +240,15 @@ describe('ThemeDemo', () => {
 
     const button = screen.getByRole('button', { name: /toggle theme/i });
     expect(button).toHaveClass(
-      'px-4', 'py-2', 'rounded-md', 'text-sm', 'font-medium', 
-      'bg-accent', 'text-button-text', 'hover:bg-accent-hover', 'transition-colors'
+      'px-4',
+      'py-2',
+      'rounded-md',
+      'text-sm',
+      'font-medium',
+      'bg-accent',
+      'text-button-text',
+      'hover:bg-accent-hover',
+      'transition-colors'
     );
   });
 
@@ -247,7 +260,7 @@ describe('ThemeDemo', () => {
     );
 
     const toggleButton = screen.getByRole('button', { name: /toggle theme/i });
-    
+
     expect(screen.getByText('light')).toBeInTheDocument();
 
     fireEvent.click(toggleButton);

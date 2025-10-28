@@ -1,7 +1,21 @@
-import React, { createContext, useContext, useEffect, useState, ReactNode, useMemo, useCallback, useRef } from 'react';
-import { ThemeContextValue, ThemeConfig, ColorConfig, ThemeDefinition, ThemeRegistry, PersistenceCallbacks } from '../../types/theme';
+import React, {
+  createContext,
+  useContext,
+  useEffect,
+  useState,
+  ReactNode,
+  useMemo,
+  useCallback,
+  useRef,
+} from 'react';
+import {
+  ThemeContextValue,
+  ThemeConfig,
+  ThemeRegistry,
+  PersistenceCallbacks,
+} from '../../types/theme';
 import { lightColors, darkColors, colorsToCSSVariables } from '../../utils/themes';
-import { persistToLocalStorage, restoreFromLocalStorage, setCookie, getCookie } from '../../utils/persistence';
+import { setCookie, getCookie } from '../../utils/persistence';
 
 const ThemeContext = createContext<ThemeContextValue | undefined>(undefined);
 
@@ -34,7 +48,9 @@ export interface ThemeProviderProps {
 /**
  * Build theme registry with light/dark defaults and custom themes
  */
-function buildThemeRegistry(customThemes?: Array<{ name: string; config: ThemeConfig; themeName?: string }>): ThemeRegistry {
+function buildThemeRegistry(
+  customThemes?: Array<{ name: string; config: ThemeConfig; themeName?: string }>
+): ThemeRegistry {
   const registry: ThemeRegistry = {
     light: {
       name: 'light',
@@ -51,18 +67,20 @@ function buildThemeRegistry(customThemes?: Array<{ name: string; config: ThemeCo
   // Validate and add custom themes
   if (customThemes) {
     const names = new Set<string>(['light', 'dark']);
-    
+
     for (const customTheme of customThemes) {
       if (names.has(customTheme.name)) {
-        console.warn(`[ThemeProvider] Duplicate theme name "${customTheme.name}" detected. Skipping.`);
+        console.warn(
+          `[ThemeProvider] Duplicate theme name "${customTheme.name}" detected. Skipping.`
+        );
         continue;
       }
-      
+
       if (!customTheme.name || customTheme.name.trim() === '') {
         console.warn('[ThemeProvider] Theme with empty name detected. Skipping.');
         continue;
       }
-      
+
       names.add(customTheme.name);
       registry[customTheme.name] = {
         name: customTheme.name,
@@ -77,33 +95,33 @@ function buildThemeRegistry(customThemes?: Array<{ name: string; config: ThemeCo
 
 /**
  * ThemeProvider component that provides theme context to all child components
- * 
+ *
  * @example
  * ```tsx
  * // Basic usage with default light theme
  * <ThemeProvider>
  *   <App />
  * </ThemeProvider>
- * 
+ *
  * // With custom themes
- * <ThemeProvider 
+ * <ThemeProvider
  *   themes={[
  *     { name: 'corporate', config: { colors: corporateColors }, themeName: 'Corporate' }
  *   ]}
  * >
  *   <App />
  * </ThemeProvider>
- * 
+ *
  * // With SSR (enforces cookies)
- * <ThemeProvider 
+ * <ThemeProvider
  *   ssr={true}
  *   theme="dark"
  * >
  *   <App />
  * </ThemeProvider>
- * 
+ *
  * // With custom persistence
- * <ThemeProvider 
+ * <ThemeProvider
  *   persistence={{
  *     callbacks: {
  *       persist: async (name) => await saveToBackend(name),
@@ -125,10 +143,10 @@ export function ThemeProvider({
 }: ThemeProviderProps) {
   // Build theme registry once
   const themeRegistry = useMemo(() => buildThemeRegistry(customThemes), [customThemes]);
-  
+
   // Track if this is first mount
   const isFirstMount = useRef(true);
-  
+
   // Determine default theme
   const getDefaultTheme = useCallback((): string => {
     return initialTheme || 'light';
@@ -139,21 +157,24 @@ export function ThemeProvider({
   const [isHydrated, setIsHydrated] = useState(!ssr);
 
   // Persistence helpers
-  const persistTheme = useCallback(async (themeName: string) => {
-    if (!persistence.enabled) return;
+  const persistTheme = useCallback(
+    async (themeName: string) => {
+      if (!persistence.enabled) return;
 
-    if (persistence.callbacks?.persist) {
-      try {
-        await persistence.callbacks.persist(themeName);
-      } catch (error) {
-        console.error('[ThemeProvider] Custom persist callback failed:', error);
+      if (persistence.callbacks?.persist) {
+        try {
+          await persistence.callbacks.persist(themeName);
+        } catch (error) {
+          console.error('[ThemeProvider] Custom persist callback failed:', error);
+        }
+      } else {
+        const key = persistence.key || 'userPreferences';
+        // Default to cookies for better cross-browser persistence
+        setCookie(key, themeName);
       }
-    } else {
-      const key = persistence.key || 'userPreferences';
-      // Default to cookies for better cross-browser persistence
-      setCookie(key, themeName);
-    }
-  }, [persistence]);
+    },
+    [persistence]
+  );
 
   const restoreTheme = useCallback(async (): Promise<string | null> => {
     if (!persistence.enabled) return null;
@@ -221,15 +242,15 @@ export function ThemeProvider({
     if (typeof document === 'undefined' || !isHydrated) return;
 
     const root = document.documentElement;
-    
+
     // Remove existing theme classes
     Object.keys(themeRegistry).forEach(name => {
       root.classList.remove(`${name}-theme`);
     });
-    
+
     // Add current theme class
     root.classList.add(`${currentTheme}-theme`);
-    
+
     // Apply CSS variables for colors
     const cssVariables = colorsToCSSVariables(currentColors);
     Object.entries(cssVariables).forEach(([property, value]) => {
@@ -238,15 +259,20 @@ export function ThemeProvider({
   }, [currentTheme, currentColors, themeRegistry, isHydrated]);
 
   // Update theme function
-  const updateTheme = useCallback((name: string) => {
-    if (!themeRegistry[name]) {
-      console.warn(`[ThemeProvider] Theme "${name}" not found in registry. Available themes: ${Object.keys(themeRegistry).join(', ')}`);
-      return;
-    }
-    setCurrentTheme(name);
-    // Clear any config updates when switching themes
-    setThemeUpdates({});
-  }, [themeRegistry]);
+  const updateTheme = useCallback(
+    (name: string) => {
+      if (!themeRegistry[name]) {
+        console.warn(
+          `[ThemeProvider] Theme "${name}" not found in registry. Available themes: ${Object.keys(themeRegistry).join(', ')}`
+        );
+        return;
+      }
+      setCurrentTheme(name);
+      // Clear any config updates when switching themes
+      setThemeUpdates({});
+    },
+    [themeRegistry]
+  );
 
   // Update config function (merges with existing)
   const updateConfig = useCallback((config: Partial<ThemeConfig>) => {
@@ -255,7 +281,11 @@ export function ThemeProvider({
       const merged = { ...prev };
       Object.keys(config).forEach(key => {
         const typedKey = key as keyof ThemeConfig;
-        if (typeof config[typedKey] === 'object' && config[typedKey] !== null && !Array.isArray(config[typedKey])) {
+        if (
+          typeof config[typedKey] === 'object' &&
+          config[typedKey] !== null &&
+          !Array.isArray(config[typedKey])
+        ) {
           merged[typedKey] = { ...merged[typedKey], ...config[typedKey] } as any;
         } else {
           merged[typedKey] = config[typedKey] as any;
@@ -281,29 +311,25 @@ export function ThemeProvider({
     toggleTheme,
   };
 
-  return (
-    <ThemeContext.Provider value={value}>
-      {children}
-    </ThemeContext.Provider>
-  );
+  return <ThemeContext.Provider value={value}>{children}</ThemeContext.Provider>;
 }
 
 /**
  * Hook to access theme context
- * 
+ *
  * @example
  * ```tsx
  * function MyComponent() {
- *   const { 
- *     currentTheme, 
- *     themes, 
- *     theme, 
+ *   const {
+ *     currentTheme,
+ *     themes,
+ *     theme,
  *     colors,
  *     updateTheme,
  *     updateConfig,
  *     toggleTheme
  *   } = useTheme();
- *   
+ *
  *   return (
  *     <div>
  *       <p>Current theme: {currentTheme}</p>

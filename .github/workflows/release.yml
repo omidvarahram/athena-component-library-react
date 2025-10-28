@@ -1,0 +1,58 @@
+name: 📦 Release to NPM
+
+on:
+  release:
+    types: [published]
+  workflow_dispatch:
+    inputs:
+      version:
+        description: 'Version bump type'
+        required: true
+        default: 'patch'
+        type: choice
+        options:
+          - patch
+          - minor  
+          - major
+
+jobs:
+  publish:
+    name: 📦 Publish to NPM
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: 📥 Checkout code
+        uses: actions/checkout@v4
+        
+      - name: 📦 Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+          cache: 'yarn'
+          registry-url: 'https://registry.npmjs.org'
+          
+      - name: 📥 Install dependencies
+        run: yarn install --frozen-lockfile
+        
+      - name: 🧪 Run quality checks
+        run: |
+          yarn lint
+          yarn test
+          
+      - name: 🏗️ Build package
+        run: yarn build
+        
+      - name: 🏷️ Version bump (manual trigger only)
+        if: github.event_name == 'workflow_dispatch'
+        run: |
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub Action"
+          npm version ${{ github.event.inputs.version }}
+          git push origin master --tags
+        
+      - name: 📦 Publish to NPM
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+        run: |
+          cd build
+          npm publish --access public

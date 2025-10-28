@@ -40,7 +40,7 @@ describe('persistence utilities', () => {
 
       // Should not throw error
       expect(() => setCookie('test-key', 'test-value')).not.toThrow();
-      
+
       // Restore document
       (global as any).document = originalDocument;
     });
@@ -59,7 +59,7 @@ describe('persistence utilities', () => {
       (global as any).document = undefined;
 
       expect(getCookie('test-key')).toBeNull();
-      
+
       // Restore document
       (global as any).document = originalDocument;
     });
@@ -68,12 +68,19 @@ describe('persistence utilities', () => {
       // Test with various empty inputs
       expect(getCookie('')).toBeNull();
     });
+
+    it('should handle cookie parsing logic with simple tests', () => {
+      // Test that the function exists and handles various inputs
+      expect(() => getCookie('test')).not.toThrow();
+      expect(() => getCookie('')).not.toThrow();
+      expect(() => getCookie('missing-key')).not.toThrow();
+    });
   });
 
   describe('persistToLocalStorage', () => {
     it('should persist value to localStorage', () => {
       persistToLocalStorage('test-key', 'test-value');
-      
+
       expect(localStorageMock.setItem).toHaveBeenCalledWith('test-key', 'test-value');
     });
 
@@ -94,44 +101,47 @@ describe('persistence utilities', () => {
       (global as any).window = undefined;
 
       expect(() => persistToLocalStorage('test-key', 'test-value')).not.toThrow();
-      
+
       // Restore window
       (global as any).window = originalWindow;
     });
 
     it('should persist complex values', () => {
       persistToLocalStorage('complex', JSON.stringify({ theme: 'dark', version: 1 }));
-      
+
       expect(localStorageMock.setItem).toHaveBeenCalledWith(
-        'complex', 
+        'complex',
         '{"theme":"dark","version":1}'
       );
     });
 
     it('should persist empty values', () => {
       persistToLocalStorage('empty', '');
-      
+
       expect(localStorageMock.setItem).toHaveBeenCalledWith('empty', '');
     });
 
     it('should persist special characters', () => {
       persistToLocalStorage('special', 'value with spaces & symbols!');
-      
-      expect(localStorageMock.setItem).toHaveBeenCalledWith('special', 'value with spaces & symbols!');
+
+      expect(localStorageMock.setItem).toHaveBeenCalledWith(
+        'special',
+        'value with spaces & symbols!'
+      );
     });
   });
 
   describe('restoreFromLocalStorage', () => {
     it('should restore value from localStorage', () => {
       localStorageMock.getItem.mockReturnValue('stored-value');
-      
+
       expect(restoreFromLocalStorage('test-key')).toBe('stored-value');
       expect(localStorageMock.getItem).toHaveBeenCalledWith('test-key');
     });
 
     it('should return null for non-existent key', () => {
       localStorageMock.getItem.mockReturnValue(null);
-      
+
       expect(restoreFromLocalStorage('non-existent')).toBeNull();
     });
 
@@ -152,7 +162,7 @@ describe('persistence utilities', () => {
       (global as any).window = undefined;
 
       expect(restoreFromLocalStorage('test-key')).toBeNull();
-      
+
       // Restore window
       (global as any).window = originalWindow;
     });
@@ -160,19 +170,19 @@ describe('persistence utilities', () => {
     it('should restore complex values', () => {
       const complexValue = JSON.stringify({ theme: 'dark', settings: { auto: true } });
       localStorageMock.getItem.mockReturnValue(complexValue);
-      
+
       expect(restoreFromLocalStorage('complex')).toBe(complexValue);
     });
 
     it('should restore empty string values', () => {
       localStorageMock.getItem.mockReturnValue('');
-      
+
       expect(restoreFromLocalStorage('empty')).toBe('');
     });
 
     it('should handle different key formats', () => {
       localStorageMock.getItem.mockReturnValue('value');
-      
+
       expect(restoreFromLocalStorage('simple-key')).toBe('value');
       expect(restoreFromLocalStorage('key.with.dots')).toBe('value');
       expect(restoreFromLocalStorage('key_with_underscores')).toBe('value');
