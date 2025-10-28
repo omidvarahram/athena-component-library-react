@@ -1,6 +1,6 @@
 {
   "name": "athena-component-library",
-  "version": "0.1.0",
+  "version": "1.0.0",
   "description": "Professional, themeable, accessible React component library built with TypeScript and Tailwind CSS",
   "main": "dist/index.js",
   "module": "dist/index.mjs",
