@@ -75,9 +75,6 @@ jobs:
       - name: 📥 Install dependencies
         run: yarn install --frozen-lockfile
         
-      - name: 🏗️ Build package
-        run: yarn build
-        
       # Run semantic-release for automated versioning and publishing
       - name: 🏷️ Semantic Release
         env:
@@ -96,6 +93,10 @@ jobs:
           
           # Run semantic-release
           npx semantic-release
+          
+      # Build package AFTER version update
+      - name: 🏗️ Build package with updated version
+        run: yarn build
           
       # Publish to NPM (after semantic-release creates the package)  
       - name: 📦 Publish to NPM
