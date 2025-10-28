@@ -125,6 +125,22 @@ Every release must pass:
 - ✅ **Security**: No moderate+ vulnerabilities in production dependencies
 - ✅ **Build**: Successful TypeScript compilation and bundling
 
+## 🚀 Pre-commit vs CI Checks
+
+**Pre-commit (Fast):**
+
+- 📝 Linting with auto-fix (ESLint + Prettier)
+- 🔒 Security audit (production dependencies only)
+- ⚡ Optimized for speed to not slow down development
+
+**CI Pipeline (Comprehensive):**
+
+- 📝 Full linting validation
+- 🧪 Complete test suite with coverage requirements
+- 🔒 Comprehensive security audit
+- 🏗️ Build verification
+- 🚀 Automated publishing (on master)
+
 ## 🔍 Monitoring
 
 - **GitHub Actions**: Monitor workflow runs in Actions tab

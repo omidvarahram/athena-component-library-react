@@ -7,12 +7,9 @@ echo "🔍 Running pre-commit checks..."
 echo "📝 Running linting checks..."
 yarn lint-staged
 
-# Run tests with coverage
-echo "🧪 Running tests with coverage..."
-yarn test
-
 # Run security audit
 echo "🔒 Running security audit..."
 yarn audit --groups dependencies
 
 echo "✅ Pre-commit checks completed successfully!"
+echo "ℹ️  Full test suite will run in CI pipeline"
