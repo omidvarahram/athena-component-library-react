@@ -6,6 +6,16 @@ module.exports = {
       prerelease: 'beta',
       channel: 'beta',
     },
+    {
+      name: 'feature/*',
+      prerelease: 'alpha',
+      channel: 'alpha',
+    },
+    {
+      name: 'fix/*',
+      prerelease: 'alpha',
+      channel: 'alpha',
+    },
   ],
   plugins: [
     // Analyze commits to determine version bump

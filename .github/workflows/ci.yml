@@ -4,7 +4,7 @@ on:
   push:
     branches: [ master, develop ]
   pull_request:
-    branches: [ master ]
+    branches: [ master, develop, feature/*, fix/* ]
 
 # Grant GITHUB_TOKEN the permissions required by semantic-release
 permissions:
